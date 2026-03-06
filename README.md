@@ -23,9 +23,9 @@ EGTB addresses the **Uniform Sparsity Paradox** by dynamically modulating activa
 from egtb_core import EGTBMoELayer
 model = EGTBMoELayer(n_embed=4096, n_experts=128, target_sparsity=0.7)
 output = model(hidden_states)
+```
 
-## 📝 Citation
-
+## Citation
 ```bibtex
 @inproceedings{egtb2026,
   title={Adaptive Computational Scaling in Sparse Mixture-of-Experts via Entropy-Gated Thinking Budgets},
