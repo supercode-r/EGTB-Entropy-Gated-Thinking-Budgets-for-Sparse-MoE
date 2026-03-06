@@ -1,32 +1,25 @@
-# EGTB-Entropy-Gated-Thinking-Budgets-for-Sparse-MoE
-This repository contains the official implementation and research artifacts for "Adaptive Computational Scaling in Sparse Mixture-of-Experts via Entropy-Gated Thinking Budgets."
+# EGTB: Entropy-Gated Thinking Budgets for Sparse MoE
 
-Overview
+[![Paper Status](https://img.shields.io/badge/Status-EAI%20CSECS%202026-blue.svg)](./paper/main.pdf)
+[![Framework](https://img.shields.io/badge/Framework-PyTorch-orange.svg)](./egtb_core.py)
 
-EGTB is a novel framework designed to resolve the "Uniform Sparsity Paradox" in Mixture-of-Experts (MoE) models. While traditional MoE models use a fixed $k$ (e.g., Top-2), EGTB uses information-theoretic signals to dynamically allocate compute:
+Official repository for **"Adaptive Computational Scaling in Sparse Mixture-of-Experts via Entropy-Gated Thinking Budgets"**.
 
-Entropy Gate: Uses Shannon Entropy and Varentropy to sense token difficulty.
+## 🧠 Overview
+EGTB addresses the **Uniform Sparsity Paradox** [cite: 15] by dynamically modulating activated parameters based on real-time entropy metrics[cite: 7].
 
-PI-Controller: Regulates routing thresholds to maintain global FLOP consistency.
+### Key Equations
+* **Entropy Sensing ($H$):** $H(x) = -\sum_{i=1}^{N} p_i \log_2 p_i$ [cite: 42]
+* **Varentropy ($V$):** $V(x) = \sum_{i=1}^{N} p_i (\log_2 p_i + H(x))^2$ [cite: 49]
+* **PI-Controller ($\tau$):** $\tau_{t+1} = \tau_t + K_p e_t + K_i \int e_t dt$ [cite: 56]
 
-Null-Experts: Implements an "express lane" for functional tokens (punctuation, fillers), bypassing FFN computation.
+## 📊 Performance
+* **Efficiency:** 32% Average Active FLOP reduction.
+* **Accuracy:** +4.2% on LiveCodeBench (Zero-shot).
+* **Reasoning:** +15% completion on DeepPlanning long-horizon tasks[cite: 98].
 
-Repository Structure
-
-egtb/: Core Python implementation (Router, PI-Controller, MoE Layers).
-
-paper/: LaTeX source for the EAI CSECS 2026 submission.
-
-benchmarks/: Scripts for evaluating on DeepPlanning and LiveCodeBench.
-
-Key Findings
-
-32% Reduction in average active FLOPs.
-
-4.2% Improvement in zero-shot coding accuracy.
-
-Successfully manages "Reasoning Exhaustion" in long-trajectory agentic tasks.
-
-Citation
-
-If you use this work in your research, please cite the paper provided in the /paper directory.
+## 🛠 Usage
+```python
+from egtb_core import EGTBMoELayer
+model = EGTBMoELayer(n_embed=4096, n_experts=128, target_sparsity=0.7)
+output = model(hidden_states)
